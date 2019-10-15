@@ -1,0 +1,122 @@
+Basic သင်တန်းမှ
+============
+
+Lesson (175)
+===========
+
+App တခုလုံးကို Custom font ထည့်နည်း
+===========
+
+၁။ AIDE project အသစ်တခု စလိုက်ပါ။
+
+၂။ app/src/main/assets/font ဆိုတဲ့ folder ကို ဆောက်ပြီး Custom font file ကို ထည့်ထားပါ။ ဥပမာ myfont.ttf
+
+၃။ TypefaceUtils.java ဖိုင်ကို create လုပ်ပြီး အောက်က code တွေ ထည့်ပါ။
+
+=======
+//package nnl.aide.font;
+
+import android.content.*;
+import android.graphics.*;
+import java.lang.reflect.*;
+
+public class TypefaceUtils
+{
+
+public static void overrideFont(Context context, String defaultFontNameToOverride, String customFontFileNameInAssets) {
+try {
+
+final Typeface customFontTypeface = Typeface.createFromAsset(context.getAssets(), customFontFileNameInAssets);
+
+final Field defaultFontTypefaceField = Typeface.class.getDeclaredField(defaultFontNameToOverride);
+
+defaultFontTypefaceField.setAccessible(true);
+
+defaultFontTypefaceField.set(null, customFontTypeface);
+
+} catch (Exception e) {
+
+// Log.e("Can not set custom font " + customFontFileNameInAssets + " instead of " + defaultFontNameToOverride);
+
+}
+}
+}
+=======
+
+၄။ MyApp.java ဖိုင်ကို create လုပ်ပြီး အောက်က code တွေ ထည့်ပါ။
+
+=======
+//package nnl.aide.font;
+import android.app.*;
+
+public class MyApp extends Application
+{
+
+@Override
+public void onCreate()
+{
+TypefaceUtils.overrideFont(getApplicationContext(), "SERIF", "font/myfont.ttf");
+super.onCreate();
+}
+
+}
+=======
+
+၅။ res/values/styles.xml ဖိုင်မှာ အောက်ကလို typeface အတွက် item ထည့်ထားပါ။
+
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+<item name="android:typeface">serif</item>
+</style>
+</resources>
+=======
+
+၆။ res/values-v21/styles.xml ဖိုင်မှာ အောက်ကလို typeface အတွက် item ထည့်ထားပါ။
+
+========
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="AppTheme" parent="@android:style/Theme.Material.Light">
+<item name="android:typeface">serif</item>
+</style>
+</resources>
+========
+
+၇။ AndroidManifest.xml ဖိုင်ရဲ့ <application
+tag ထဲမှာ
+
+android:name=".MyApp"
+
+ဆိုတာ ထည့်ပါ။
+
+=========
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="nnl.aide.font" >
+
+<application
+android:name=".MyApp"
+android:allowBackup="true"
+android:icon="@drawable/ic_launcher"
+android:label="@string/app_name"
+android:theme="@style/AppTheme"
+>
+<activity
+android:name=".MainActivity"
+android:label="@string/app_name" >
+<intent-filter>
+<action android:name="android.intent.action.MAIN" />
+
+<category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity>
+</application>
+
+</manifest>
+=========
+
+၈။ ဒါဆိုရင် Layout ဖိုင်တွေမှာ ထည့်သမျှ View/Widget တွေဟာ Custom font နဲ့ ဖြစ်သွားပါမယ်။
+
+======
